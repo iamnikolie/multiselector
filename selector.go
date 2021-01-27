@@ -40,6 +40,29 @@ func NewSelector(rules interface{}) (*Selector, error) {
 	return s, nil
 }
 
+func NewSelectorDef(rules interface{}) *Selector {
+	s, err := NewSelector(rules)
+	if err != nil {
+		return &Selector{}
+	}
+	return s
+}
+
+func (s *Selector) AddRule(rule interface{}) {
+	switch rule.(type) {
+	case []string:
+		tmp := s.rules
+		tmp = append(tmp, rule.([]string)...)
+		s.rules = tmp
+	case string:
+		tmp := s.rules
+		tmp = append(tmp, strings.Split(rule.(string), ",")...)
+		s.rules = tmp
+	default:
+		// do nothing
+	}
+}
+
 func (s Selector) Len() int {
 	return len(s.rules)
 }
